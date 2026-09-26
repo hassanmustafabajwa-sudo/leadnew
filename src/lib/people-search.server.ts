@@ -10,7 +10,7 @@ export type PersonResult = {
 const GENERIC=/^(info|hello|contact|sales|support|admin|office|careers|jobs|team|mail|enquiries|inquiries)@/i;
 const EMAIL_RE=/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}/ig;
 function email(v:string|null){if(!v||GENERIC.test(v))return null;return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)?v.toLowerCase():null;}
-function contacts(rs:WebResult[]){const t=rs.map(r=>r.title+" "+r.description).join(" ");const e=[...(t.match(EMAIL_RE)||[])].map(x=>x.toLowerCase()).filter(x=>!GENERIC.test(x));return email(e[0]||null);}
+function contacts(rs:WebResult[]){const t=rs.map(r=>r.title+" "+r.description).join(" ");const e=[...(t.match(EMAIL_RE)||[])].map(x=>x.toLowerCase()).filter(x=>!GENERIC.test(x));const phones=t.match(/(?:\\+?\\d[\\d ()\\-]{6,}\\d)/g)||[];return {email:email(e[0]||null),phone:phones[0]?.trim()||null};}
 async function discover(query:string,role:string,location:string,service:string,limit:number,linkedin:boolean):Promise<PersonResult[]>{
  const qs=linkedin
  ? ["site:linkedin.com/in "+query+" "+role+" "+location,"site:linkedin.com/in "+query+" "+location+" "+service]
@@ -26,7 +26,7 @@ async function discover(query:string,role:string,location:string,service:string,
  let parsed:any; try{parsed=await generateJson({provider:"lovable",task:"people_discovery",system:"Extract only real professional people supported by the supplied public sources. Never invent data.",prompt:"Find decision makers for "+query+" in "+location+". Role: "+role+". Service: "+service+". Mode: "+(linkedin?"linkedin-public-web":"decision-maker")+"\\n"+src,schema,schemaName:"people_discovery"});}catch{return []}
  return (parsed.people||[]).map((p:any)=>{const rs=unique.filter(r=>(r.title+" "+r.description).toLowerCase().includes(String(p.full_name).split(" ")[0].toLowerCase())||r.description.toLowerCase().includes(String(p.company_name).toLowerCase()));const ss=rs.length?rs:unique.slice(0,2);return {
  full_name:String(p.full_name).trim(),job_title:p.job_title||null,company_name:String(p.company_name).trim(),location:p.location||location||null,
- linkedin_url:p.linkedin_url&&/linkedin\.com\\/in\\//i.test(p.linkedin_url)?p.linkedin_url:null,professional_email:contacts(ss),professional_phone:null,
+ linkedin_url:p.linkedin_url&&/linkedin\.com\\/in\\//i.test(p.linkedin_url)?p.linkedin_url:null,professional_email:contacts(ss).email,professional_phone:contacts(ss).phone,
  company_website:null,source_urls:ss.map(r=>r.url),evidence:p.evidence||"Public source identified this person and company.",confidence:p.confidence,target_service:service||null,
  headline:p.headline||null,company_url:p.company_url||null,industry:p.industry||null,seniority:p.seniority||null,company_email:null,company_phone:null
  };}).slice(0,limit);
@@ -37,5 +37,5 @@ export async function enrichPersonContact(a:{full_name:string;company_name:strin
  const qs=["\""+a.full_name+"\" \""+a.company_name+"\" email","\""+a.full_name+"\" \""+a.company_name+"\" contact"];
  if(a.linkedin_url)qs.push("\""+a.full_name+"\" "+a.linkedin_url);
  const all:WebResult[]=[];for(const q of qs){try{all.push(...await webSearch(q,8));}catch{}}
- const emailFound=contacts(all);return {professional_email:emailFound,professional_phone:null,source_urls:[...new Set(all.map(x=>x.url))].slice(0,10),evidence:all.length?"Contact data found in public web research; verify before outreach.":"No public professional contact detail found."};
+ const found=contacts(all);return {professional_email:found.email,professional_phone:found.phone,source_urls:[...new Set(all.map(x=>x.url))].slice(0,10),evidence:all.length?"Contact data found in public web research; verify before outreach.":"No public professional contact detail found."};
 }
