@@ -122,8 +122,6 @@ export interface FileRoutesById {
   '/_authenticated/online-search': typeof AuthenticatedOnlineSearchRoute
   '/_authenticated/decision-makers': typeof AuthenticatedDecisionMakersRoute
   '/_authenticated/linkedin-leads': typeof AuthenticatedLinkedInLeadsRoute
-  '/_authenticated/decision-makers': typeof AuthenticatedDecisionMakersRoute
-  '/_authenticated/linkedin-leads': typeof AuthenticatedLinkedInLeadsRoute
   '/_authenticated/outreach': typeof AuthenticatedOutreachRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/leads/$leadId': typeof AuthenticatedLeadsLeadIdRoute
@@ -138,6 +136,8 @@ export interface FileRouteTypes {
     | '/history'
     | '/import'
     | '/online-search'
+    | '/decision-makers'
+    | '/linkedin-leads'
     | '/outreach'
     | '/settings'
     | '/leads/$leadId'
@@ -150,6 +150,8 @@ export interface FileRouteTypes {
     | '/history'
     | '/import'
     | '/online-search'
+    | '/decision-makers'
+    | '/linkedin-leads'
     | '/outreach'
     | '/settings'
     | '/leads/$leadId'
@@ -163,6 +165,8 @@ export interface FileRouteTypes {
     | '/_authenticated/history'
     | '/_authenticated/import'
     | '/_authenticated/online-search'
+    | '/_authenticated/decision-makers'
+    | '/_authenticated/linkedin-leads'
     | '/_authenticated/outreach'
     | '/_authenticated/settings'
     | '/_authenticated/leads/$leadId'
