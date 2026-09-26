@@ -12,4 +12,15 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    // The new people-search server functions import createMiddleware from
+    // @tanstack/react-start. Vite SSR can otherwise fail to resolve the
+    // transitive export on a cold start, producing the generic root error page.
+    // Pre-bundle both packages so the export chain is stable in SSR.
+    ssr: {
+      optimizeDeps: {
+        include: ["@tanstack/react-start", "@tanstack/start-client-core"],
+      },
+    },
+  },
 });
