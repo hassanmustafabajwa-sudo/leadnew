@@ -1,0 +1,9 @@
+import { createServerFn } from "@tanstack/react-start";
+import { z } from "zod";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { searchDecisionMakers, searchLinkedInLeads, enrichPersonContact } from "./people-search.server";
+const Input=z.object({query:z.string().trim().min(2).max(160),role:z.string().max(80).default("Other"),location:z.string().max(120).default(""),targetService:z.string().max(120).default(""),limit:z.number().int().min(1).max(50).default(20)});
+export const searchDecisionMakersFn=createServerFn({method:"POST"}).middleware([requireSupabaseAuth]).inputValidator((d:unknown)=>Input.parse(d)).handler(async({data,context})=>{const results=await searchDecisionMakers(data);const db:any=context.supabase;if(results.length)await db.from("decision_makers").insert(results.map(x=>({...x,user_id:context.userId})));return {results};});
+export const searchLinkedInLeadsFn=createServerFn({method:"POST"}).middleware([requireSupabaseAuth]).inputValidator((d:unknown)=>Input.parse(d)).handler(async({data,context})=>{const results=await searchLinkedInLeads(data);const db:any=context.supabase;if(results.length)await db.from("linkedin_leads").insert(results.map(x=>({...x,user_id:context.userId,source_type:"public_web"})));return {results};});
+const Enrich=z.object({id:z.string().uuid(),full_name:z.string(),company_name:z.string(),company_url:z.string().nullable().optional(),linkedin_url:z.string().nullable().optional(),table:z.enum(["decision_makers","linkedin_leads"])});
+export const enrichPersonContactFn=createServerFn({method:"POST"}).middleware([requireSupabaseAuth]).inputValidator((d:unknown)=>Enrich.parse(d)).handler(async({data,context})=>{const found=await enrichPersonContact(data);const db:any=context.supabase;await db.from(data.table).update({...found,updated_at:new Date().toISOString()}).eq("id",data.id).eq("user_id",context.userId);return found;});
