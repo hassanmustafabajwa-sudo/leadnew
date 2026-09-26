@@ -106,6 +106,8 @@ export interface FileRoutesByTo {
   '/history': typeof AuthenticatedHistoryRoute
   '/import': typeof AuthenticatedImportRoute
   '/online-search': typeof AuthenticatedOnlineSearchRoute
+  '/decision-makers': typeof AuthenticatedDecisionMakersRoute
+  '/linkedin-leads': typeof AuthenticatedLinkedInLeadsRoute
   '/outreach': typeof AuthenticatedOutreachRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/leads/$leadId': typeof AuthenticatedLeadsLeadIdRoute
