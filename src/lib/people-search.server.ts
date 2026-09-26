@@ -10,7 +10,7 @@ export type PersonResult = {
 const GENERIC=/^(info|hello|contact|sales|support|admin|office|careers|jobs|team|mail|enquiries|inquiries)@/i;
 const EMAIL_RE=/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,24}/ig;
 function email(v:string|null){if(!v||GENERIC.test(v))return null;return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)?v.toLowerCase():null;}
-function contacts(rs:WebResult[]){const t=rs.map(r=>r.title+" "+r.description).join(" ");const e=[...(t.match(EMAIL_RE)||[])].map(x=>x.toLowerCase()).filter(x=>!GENERIC.test(x));const phones=t.match(/(?:\\+?\\d[\\d ()\\-]{6,}\\d)/g)||[];return {email:email(e[0]||null),phone:phones[0]?.trim()||null};}
+function contacts(rs:WebResult[]){const t=rs.map(r=>r.title+" "+r.description).join(" ");const e=[...(t.match(EMAIL_RE)||[])].map(x=>x.toLowerCase()).filter(x=>!GENERIC.test(x));const phones=t.match(/(?:\+?\d[\d ()\-]{6,}\d)/g)||[];return {email:email(e[0]||null),phone:phones[0]?.trim()||null};}
 async function discover(query:string,role:string,location:string,service:string,limit:number,linkedin:boolean):Promise<PersonResult[]>{
  const qs=linkedin
  ? ["site:linkedin.com/in "+query+" "+role+" "+location,"site:linkedin.com/in "+query+" "+location+" "+service]
