@@ -15,6 +15,8 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedHistoryRouteImport } from './routes/_authenticated/history'
 import { Route as AuthenticatedImportRouteImport } from './routes/_authenticated/import'
 import { Route as AuthenticatedOnlineSearchRouteImport } from './routes/_authenticated/online-search'
+import { Route as AuthenticatedDecisionMakersRouteImport } from './routes/_authenticated/decision-makers'
+import { Route as AuthenticatedLinkedInLeadsRouteImport } from './routes/_authenticated/linkedin-leads'
 import { Route as AuthenticatedOutreachRouteImport } from './routes/_authenticated/outreach'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedLeadsIndexRouteImport } from './routes/_authenticated/leads/index'
@@ -51,6 +53,12 @@ const AuthenticatedOnlineSearchRoute =
     path: '/online-search',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDecisionMakersRoute = AuthenticatedDecisionMakersRouteImport.update({
+  id: '/decision-makers', path: '/decision-makers', getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedLinkedInLeadsRoute = AuthenticatedLinkedInLeadsRouteImport.update({
+  id: '/linkedin-leads', path: '/linkedin-leads', getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedOutreachRoute = AuthenticatedOutreachRouteImport.update({
   id: '/outreach',
   path: '/outreach',
@@ -84,6 +92,8 @@ export interface FileRoutesByFullPath {
   '/history': typeof AuthenticatedHistoryRoute
   '/import': typeof AuthenticatedImportRoute
   '/online-search': typeof AuthenticatedOnlineSearchRoute
+  '/decision-makers': typeof AuthenticatedDecisionMakersRoute
+  '/linkedin-leads': typeof AuthenticatedLinkedInLeadsRoute
   '/outreach': typeof AuthenticatedOutreachRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/leads/$leadId': typeof AuthenticatedLeadsLeadIdRoute
@@ -110,6 +120,10 @@ export interface FileRoutesById {
   '/_authenticated/history': typeof AuthenticatedHistoryRoute
   '/_authenticated/import': typeof AuthenticatedImportRoute
   '/_authenticated/online-search': typeof AuthenticatedOnlineSearchRoute
+  '/_authenticated/decision-makers': typeof AuthenticatedDecisionMakersRoute
+  '/_authenticated/linkedin-leads': typeof AuthenticatedLinkedInLeadsRoute
+  '/_authenticated/decision-makers': typeof AuthenticatedDecisionMakersRoute
+  '/_authenticated/linkedin-leads': typeof AuthenticatedLinkedInLeadsRoute
   '/_authenticated/outreach': typeof AuthenticatedOutreachRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/leads/$leadId': typeof AuthenticatedLeadsLeadIdRoute
@@ -207,6 +221,14 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOnlineSearchRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/decision-makers': {
+      id: '/_authenticated/decision-makers', path: '/decision-makers', fullPath: '/decision-makers',
+      preLoaderRoute: typeof AuthenticatedDecisionMakersRouteImport, parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/linkedin-leads': {
+      id: '/_authenticated/linkedin-leads', path: '/linkedin-leads', fullPath: '/linkedin-leads',
+      preLoaderRoute: typeof AuthenticatedLinkedInLeadsRouteImport, parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/outreach': {
       id: '/_authenticated/outreach'
       path: '/outreach'
@@ -249,6 +271,8 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedHistoryRoute: typeof AuthenticatedHistoryRoute
   AuthenticatedImportRoute: typeof AuthenticatedImportRoute
   AuthenticatedOnlineSearchRoute: typeof AuthenticatedOnlineSearchRoute
+  AuthenticatedDecisionMakersRoute: typeof AuthenticatedDecisionMakersRoute
+  AuthenticatedLinkedInLeadsRoute: typeof AuthenticatedLinkedInLeadsRoute
   AuthenticatedOutreachRoute: typeof AuthenticatedOutreachRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedLeadsLeadIdRoute: typeof AuthenticatedLeadsLeadIdRoute
@@ -259,6 +283,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedHistoryRoute: AuthenticatedHistoryRoute,
   AuthenticatedImportRoute: AuthenticatedImportRoute,
   AuthenticatedOnlineSearchRoute: AuthenticatedOnlineSearchRoute,
+  AuthenticatedDecisionMakersRoute: AuthenticatedDecisionMakersRoute,
+  AuthenticatedLinkedInLeadsRoute: AuthenticatedLinkedInLeadsRoute,
   AuthenticatedOutreachRoute: AuthenticatedOutreachRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedLeadsLeadIdRoute: AuthenticatedLeadsLeadIdRoute,
