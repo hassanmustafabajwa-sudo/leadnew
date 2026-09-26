@@ -26,7 +26,7 @@ async function discover(query:string,role:string,location:string,service:string,
  let parsed:any; try{parsed=await generateJson({provider:"lovable",system:"Extract only real professional people supported by the supplied public sources. Never invent data.",prompt:"Find decision makers for "+query+" in "+location+". Role: "+role+". Service: "+service+". Mode: "+(linkedin?"linkedin-public-web":"decision-maker")+"\\n"+src,schema,schemaName:"people_discovery"});}catch{return []}
  return (parsed.people||[]).map((p:any)=>{const rs=unique.filter(r=>(r.title+" "+r.description).toLowerCase().includes(String(p.full_name).split(" ")[0].toLowerCase())||r.description.toLowerCase().includes(String(p.company_name).toLowerCase()));const ss=rs.length?rs:unique.slice(0,2);return {
  full_name:String(p.full_name).trim(),job_title:p.job_title||null,company_name:String(p.company_name).trim(),location:p.location||location||null,
- linkedin_url:p.linkedin_url&&/linkedin\.com\\/in\\//i.test(p.linkedin_url)?p.linkedin_url:null,professional_email:contacts(ss).email,professional_phone:contacts(ss).phone,
+ linkedin_url:p.linkedin_url&&/linkedin\.com\/in\//i.test(p.linkedin_url)?p.linkedin_url:null,professional_email:contacts(ss).email,professional_phone:contacts(ss).phone,
  company_website:null,source_urls:ss.map(r=>r.url),evidence:p.evidence||"Public source identified this person and company.",confidence:p.confidence,target_service:service||null,
  headline:p.headline||null,company_url:p.company_url||null,industry:p.industry||null,seniority:p.seniority||null,company_email:null,company_phone:null
  };}).slice(0,limit);
